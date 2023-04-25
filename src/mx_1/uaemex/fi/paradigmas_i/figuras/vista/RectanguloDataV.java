@@ -1,0 +1,94 @@
+package mx_1.uaemex.fi.paradigmas_i.figuras.vista;
+
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.border.EmptyBorder;
+
+import mx_1.uaemex.fi.paradigmas_i.figuras.error.ValorNoValidoException;
+import mx_1.uaemex.fi.paradigmas_i.figuras.modelo.Rectangulo;
+
+
+
+public class RectanguloDataV extends FiguraAbstracta implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JSpinner altura;
+	private JSpinner base;
+
+	
+	public RectanguloDataV() {
+		super("Datos Rectangulo");
+		JButton btn;
+		JPanel panel = new JPanel(new GridLayout(3,2));
+		panel.setBorder(new EmptyBorder(10,10,10,10));
+		
+		JLabel etq = new JLabel("Altura: ");
+		this.altura = new JSpinner();
+		panel.add(etq);
+		panel.add(altura);
+		
+		etq = new JLabel("Base: ");
+		this.base = new JSpinner();
+		panel.add(etq);
+		panel.add(base);
+		
+		btn = new JButton("Enviar");
+		btn.setActionCommand("Enviar");
+		btn.addActionListener(this);
+		panel.add(btn);
+		
+		btn = new JButton("Limpiar");
+		btn.setActionCommand("Limpiar");
+		btn.addActionListener(this);
+		panel.add(btn);
+		
+		this.getContentPane().add(BorderLayout.CENTER,panel);
+		this.pack();
+		this.setResizable(false);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String comando;
+		String nombre = "VentanaCalculos";
+		
+		comando = e.getActionCommand();
+
+		switch(comando) {
+		case "Enviar":
+			int a = (Integer)this.altura.getValue();
+			int b = (Integer)this.base.getValue();
+			if(a < 1 && b < 1) {
+				JOptionPane.showMessageDialog(this,"El valor debe ser un numero superior a cero");
+			} else {
+				//Enviar el valor
+				Rectangulo r;
+				try {
+					r = new Rectangulo();
+					r.setBase(b);
+					r.setAltura(a);
+					this.ctrl.setFigura(r);
+					this.ctrlVentanas.ManipularVentanas(nombre);
+				} catch (ValorNoValidoException e1) {
+					JOptionPane.showMessageDialog(this, e1.getMessage());
+				}
+			}
+			break;
+		case "Limpiar":
+			this.altura.setValue(Integer.parseInt("0"));
+			this.base.setValue(Integer.parseInt("0"));
+			break;
+		}
+		
+	}
+}
